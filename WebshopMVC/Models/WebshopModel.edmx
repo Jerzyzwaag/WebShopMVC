@@ -1,0 +1,486 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WebshopModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Articles">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="CategoryID" Type="int" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Stock" Type="int" Nullable="false" />
+          <Property Name="SupplierID" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Categories">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="Address" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="OrderOrderdInvoice">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupplierID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrdersOrderd">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="OrderID" Type="int" Nullable="false" />
+          <Property Name="ArticleID" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrdersSold">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ArticleID" Type="int" Nullable="false" />
+          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="InBasket" Type="tinyint" />
+          <Property Name="Amount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Suppliers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="Address" Type="varchar(max)" />
+        </EntityType>
+        <Association Name="FK_Articles_Categories">
+          <End Role="Categories" Type="Self.Categories" Multiplicity="1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Articles_Suppliers">
+          <End Role="Suppliers" Type="Self.Suppliers" Multiplicity="1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderOrderdInvoice_Suppliers">
+          <End Role="Suppliers" Type="Self.Suppliers" Multiplicity="1" />
+          <End Role="OrderOrderdInvoice" Type="Self.OrderOrderdInvoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrderOrderdInvoice">
+              <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersOrderd_Articles">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="1" />
+          <End Role="OrdersOrderd" Type="Self.OrdersOrderd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersOrderd">
+              <PropertyRef Name="ArticleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersOrderd_OrderOrderdInvoice">
+          <End Role="OrderOrderdInvoice" Type="Self.OrderOrderdInvoice" Multiplicity="1" />
+          <End Role="OrdersOrderd" Type="Self.OrdersOrderd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderOrderdInvoice">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersOrderd">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersSold_Articles">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="1" />
+          <End Role="OrdersSold" Type="Self.OrdersSold" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersSold">
+              <PropertyRef Name="ArticleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersSold_Customers">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="OrdersSold" Type="Self.OrdersSold" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersSold">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebshopModelStoreContainer">
+          <EntitySet Name="Articles" EntityType="Self.Articles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderOrderdInvoice" EntityType="Self.OrderOrderdInvoice" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdersOrderd" EntityType="Self.OrdersOrderd" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdersSold" EntityType="Self.OrdersSold" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Suppliers" EntityType="Self.Suppliers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Articles_Categories" Association="Self.FK_Articles_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Articles_Suppliers" Association="Self.FK_Articles_Suppliers">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderOrderdInvoice_Suppliers" Association="Self.FK_OrderOrderdInvoice_Suppliers">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="OrderOrderdInvoice" EntitySet="OrderOrderdInvoice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersOrderd_Articles" Association="Self.FK_OrdersOrderd_Articles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="OrdersOrderd" EntitySet="OrdersOrderd" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersOrderd_OrderOrderdInvoice" Association="Self.FK_OrdersOrderd_OrderOrderdInvoice">
+            <End Role="OrderOrderdInvoice" EntitySet="OrderOrderdInvoice" />
+            <End Role="OrdersOrderd" EntitySet="OrdersOrderd" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersSold_Articles" Association="Self.FK_OrdersSold_Articles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="OrdersSold" EntitySet="OrdersSold" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersSold_Customers" Association="Self.FK_OrdersSold_Customers">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="OrdersSold" EntitySet="OrdersSold" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WebshopModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Article">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CategoryID" Type="Int32" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Stock" Type="Int32" Nullable="false" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Self.FK_Articles_Categories" FromRole="Articles" ToRole="Categories" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_Articles_Suppliers" FromRole="Articles" ToRole="Suppliers" />
+          <NavigationProperty Name="OrdersOrderds" Relationship="Self.FK_OrdersOrderd_Articles" FromRole="Articles" ToRole="OrdersOrderd" />
+          <NavigationProperty Name="OrdersSolds" Relationship="WebshopModel.FK_OrdersSold_Articles" FromRole="Article" ToRole="OrdersSold" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK_Articles_Categories" FromRole="Categories" ToRole="Articles" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="OrdersSolds" Relationship="WebshopModel.FK_OrdersSold_Customers" FromRole="Customer" ToRole="OrdersSold" />
+        </EntityType>
+        <EntityType Name="OrderOrderdInvoice">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK_OrderOrderdInvoice_Suppliers" FromRole="OrderOrderdInvoice" ToRole="Suppliers" />
+          <NavigationProperty Name="OrdersOrderds" Relationship="Self.FK_OrdersOrderd_OrderOrderdInvoice" FromRole="OrderOrderdInvoice" ToRole="OrdersOrderd" />
+        </EntityType>
+        <EntityType Name="OrdersOrderd">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="ArticleID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" />
+          <Property Name="ArticleID" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Article" Relationship="Self.FK_OrdersOrderd_Articles" FromRole="OrdersOrderd" ToRole="Articles" />
+          <NavigationProperty Name="OrderOrderdInvoice" Relationship="Self.FK_OrdersOrderd_OrderOrderdInvoice" FromRole="OrdersOrderd" ToRole="OrderOrderdInvoice" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK_Articles_Suppliers" FromRole="Suppliers" ToRole="Articles" />
+          <NavigationProperty Name="OrderOrderdInvoices" Relationship="Self.FK_OrderOrderdInvoice_Suppliers" FromRole="Suppliers" ToRole="OrderOrderdInvoice" />
+        </EntityType>
+        <Association Name="FK_Articles_Categories">
+          <End Role="Categories" Type="Self.Category" Multiplicity="1" />
+          <End Role="Articles" Type="Self.Article" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categories">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Articles_Suppliers">
+          <End Role="Suppliers" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Articles" Type="Self.Article" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersOrderd_Articles">
+          <End Role="Articles" Type="Self.Article" Multiplicity="1" />
+          <End Role="OrdersOrderd" Type="Self.OrdersOrderd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersOrderd">
+              <PropertyRef Name="ArticleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderOrderdInvoice_Suppliers">
+          <End Role="Suppliers" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="OrderOrderdInvoice" Type="Self.OrderOrderdInvoice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrderOrderdInvoice">
+              <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersOrderd_OrderOrderdInvoice">
+          <End Role="OrderOrderdInvoice" Type="Self.OrderOrderdInvoice" Multiplicity="1" />
+          <End Role="OrdersOrderd" Type="Self.OrdersOrderd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderOrderdInvoice">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersOrderd">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WebshopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Articles" EntityType="Self.Article" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="OrderOrderdInvoices" EntityType="Self.OrderOrderdInvoice" />
+          <EntitySet Name="OrdersOrderds" EntityType="Self.OrdersOrderd" />
+          <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+          <AssociationSet Name="FK_Articles_Categories" Association="Self.FK_Articles_Categories">
+            <End Role="Categories" EntitySet="Categories" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Articles_Suppliers" Association="Self.FK_Articles_Suppliers">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersOrderd_Articles" Association="Self.FK_OrdersOrderd_Articles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="OrdersOrderd" EntitySet="OrdersOrderds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderOrderdInvoice_Suppliers" Association="Self.FK_OrderOrderdInvoice_Suppliers">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="OrderOrderdInvoice" EntitySet="OrderOrderdInvoices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersOrderd_OrderOrderdInvoice" Association="Self.FK_OrdersOrderd_OrderOrderdInvoice">
+            <End Role="OrderOrderdInvoice" EntitySet="OrderOrderdInvoices" />
+            <End Role="OrdersOrderd" EntitySet="OrdersOrderds" />
+          </AssociationSet>
+          <EntitySet Name="OrdersSolds" EntityType="WebshopModel.OrdersSold" />
+          <AssociationSet Name="FK_OrdersSold_Articles" Association="WebshopModel.FK_OrdersSold_Articles">
+            <End Role="Article" EntitySet="Articles" />
+            <End Role="OrdersSold" EntitySet="OrdersSolds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdersSold_Customers" Association="WebshopModel.FK_OrdersSold_Customers">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="OrdersSold" EntitySet="OrdersSolds" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="OrdersSold">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ArticleID" Type="Int32" Nullable="false" />
+          <Property Name="CustomerID" Type="Int32" Nullable="false" />
+          <Property Name="InBasket" Type="Byte" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Article" Relationship="WebshopModel.FK_OrdersSold_Articles" FromRole="OrdersSold" ToRole="Article" />
+          <NavigationProperty Name="Customer" Relationship="WebshopModel.FK_OrdersSold_Customers" FromRole="OrdersSold" ToRole="Customer" />
+        </EntityType>
+        <Association Name="FK_OrdersSold_Articles">
+          <End Type="WebshopModel.Article" Role="Article" Multiplicity="1" />
+          <End Type="WebshopModel.OrdersSold" Role="OrdersSold" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Article">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersSold">
+              <PropertyRef Name="ArticleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdersSold_Customers">
+          <End Type="WebshopModel.Customer" Role="Customer" Multiplicity="1" />
+          <End Type="WebshopModel.OrdersSold" Role="OrdersSold" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdersSold">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WebshopModelStoreContainer" CdmEntityContainer="WebshopEntities">
+          <EntitySetMapping Name="Articles">
+            <EntityTypeMapping TypeName="WebshopModel.Article">
+              <MappingFragment StoreEntitySet="Articles">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="WebshopModel.Category">
+              <MappingFragment StoreEntitySet="Categories">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="WebshopModel.Customer">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderOrderdInvoices">
+            <EntityTypeMapping TypeName="WebshopModel.OrderOrderdInvoice">
+              <MappingFragment StoreEntitySet="OrderOrderdInvoice">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdersOrderds">
+            <EntityTypeMapping TypeName="WebshopModel.OrdersOrderd">
+              <MappingFragment StoreEntitySet="OrdersOrderd">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ArticleID" ColumnName="ArticleID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="WebshopModel.Supplier">
+              <MappingFragment StoreEntitySet="Suppliers">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdersSolds">
+            <EntityTypeMapping TypeName="WebshopModel.OrdersSold">
+              <MappingFragment StoreEntitySet="OrdersSold">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="InBasket" ColumnName="InBasket" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="ArticleID" ColumnName="ArticleID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

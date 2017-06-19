@@ -1,0 +1,139 @@
+﻿@model IEnumerable<WebshopMVC.Models.Article>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    Find by name: @Html.TextBox("SearchString")
+    <button onclick="search()">Search</button>
+</p>
+
+<div class="form-group" onchange="change()">
+    <div class="col-md-10">
+        @Html.DropDownList("CategoryID", null, htmlAttributes: new { @class = "form-control", @onchange="change()" })
+    </div>
+</div>
+<div id="order" hidden="hidden">desc</div>
+<table id="articles" class="table">
+    <tr id="tableHeader">
+        <th onclick="sort('Name')" >
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th onclick="sort('Price')">
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Stock)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+
+            <td>
+                <button onclick="addToCart(@item.ID)">Add to cart</button>
+            </td>
+        </tr>
+    }
+
+</table>
+<script>
+    function filltable(data) {
+        var tableHeader = $('#tableHeader').clone();
+        $('#articles').html(tableHeader);
+        for (var i = 0; i < data.length; i++) {
+            var tablerows = $('<tr>');
+
+            var tableDataName = $('<td>');
+            tableDataName.html(data[i].Name);
+            tablerows.append(tableDataName);
+
+            var tableDataDescription = $('<td>');
+            tableDataDescription.html(data[i].Description);
+            tablerows.append(tableDataDescription);
+
+            var tableDataPrice = $('<td>');
+            tableDataPrice.html(data[i].Price);
+            tablerows.append(tableDataPrice);
+
+            var tableDataStock = $('<td>');
+            tableDataStock.html(data[i].Stock);
+            tablerows.append(tableDataStock);
+
+            var tableDataCategory = $('<td>');
+            tableDataCategory.html(data[i].Category.Name);
+            tablerows.append(tableDataCategory);
+
+            var cartRow = $('<td>');
+            var cartButton = $('<button>');
+            cartButton.html("Add to cart");
+            cartRow.append(cartButton);
+            tablerows.append(cartRow);
+
+            $('#articles').append(tablerows);
+        }
+    }
+
+
+
+    function sort(sortOn) {
+        var sortOrder = $(order).html();
+        $.get('http://localhost:62982/articleApi/sort?sortorder=' + sortOrder+'&sortOn='+sortOn
+            , { sortOrder,sortOn },
+            function (data) {
+                filltable(data);
+                var order = $('#order').html();
+                if (order == "asc") {
+                    $('#order').html("desc");
+                }
+                if (order == "desc") {
+                    $('#order').html("asc");
+                }
+            })
+    }
+    function search() {
+        var searchTerm = $('#SearchString').val();
+        $.post('http://localhost:62982/articleApi/search/?searchTerm=' + searchTerm, searchTerm, function (data) { filltable(data) });
+    };
+    function change() {
+        var categoryID = $('#CategoryID').val();
+        $.post('http://localhost:62982/articleApi/category/?categoryID=' + categoryID, categoryID, function (data) { filltable(data) })
+    };
+    function addToCart(id) {
+        var articleID = id;
+        console.log(articleID);
+        $.post('http://localhost:62982/OrderSoldsApi/addToCart/?articleID='+articleID,articleID,function(data){
+            //cartnumber+1;
+        });
+    }
+</script>

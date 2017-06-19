@@ -1,0 +1,59 @@
+﻿@model IEnumerable<WebshopMVC.Models.OrdersSold>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Cart";
+    ViewBag.IDs = new List<int>();
+}
+
+    
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Article.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Article.Price)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr id="@item.ID">
+            <td>
+                @Html.DisplayFor(modelItem => item.Article.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Article.Price)
+            </td>
+            <td>
+               <button onclick="remove(@item.ID)">remove from Cart</button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script>
+    function remove(id) {
+        $.ajax({
+            type: 'Delete',
+            url: 'http://localhost:62982/api/OrdersSoldsApi/' + id,
+            succes: function (data) {
+                console.log(data);
+                console.log('succes');
+                $('#' + id).remove();
+            },
+            error: function (data) {
+                console.log('done')
+                $('#' + id).remove();
+            }
+
+        });
+        $('#' + id).remove();
+    }
+   
+
+</script>
+
+
